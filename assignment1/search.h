@@ -6,7 +6,7 @@
 using namespace std;
 
 vector<struct step> Bfs(Coord start, Coord goal, vector<int> sequences);
-// void Ids(Coord start, Coord goal, vector<int> sequences);
+vector<struct step> Ids(Coord start, Coord goal, vector<int> sequences);
 // void Astar(Coord start, Coord goal, vector<int> sequences);
 
 struct step {
@@ -19,6 +19,8 @@ struct state {
     int dep;
     Coord pos;
 };
+
+extern Coord Dir[5];
 
 #define LEFT  0
 #define RIGHT 1
