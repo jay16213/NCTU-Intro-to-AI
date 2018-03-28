@@ -73,6 +73,10 @@ int main()
         {
             sol = Ids(Coord(0, 0), goal, sequences);
         }
+        else if(method == "A*")
+        {
+            sol = Astar(Coord(0, 0), goal, sequences);
+        }
 
         printSolution(sol);
     }

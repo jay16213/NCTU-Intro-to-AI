@@ -7,7 +7,7 @@ using namespace std;
 
 vector<struct step> Bfs(Coord start, Coord goal, vector<int> sequences);
 vector<struct step> Ids(Coord start, Coord goal, vector<int> sequences);
-// void Astar(Coord start, Coord goal, vector<int> sequences);
+vector<struct step> Astar(Coord start, Coord goal, vector<int> sequences);
 
 struct step {
     int dir;

@@ -1,7 +1,8 @@
+CODE = main.cpp Coord.h Coord.cpp Bfs.cpp Ids.cpp Astar.cpp
 
-main: hw1.cpp Coord.h Coord.cpp Bfs.cpp Ids.cpp
-	g++ hw1.cpp Coord.cpp Bfs.cpp Ids.cpp
+main: $(CODE)
+	g++ $(CODE) -o main
 
 .PHONY: clean
 clean:
-	$(RM) *.exe
+	$(RM) *.exe *.out

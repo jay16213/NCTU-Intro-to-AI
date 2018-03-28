@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-Coord Dir[5] = { Coord(-1, 0), Coord(1, 0), Coord(0, -1), Coord(0, 1),Coord(0, 0) };
+Coord Dir[5] = { Coord(-1, 0), Coord(1, 0), Coord(0, -1), Coord(0, 1), Coord(0, 0) };
 
 
 vector<struct step> Bfs(Coord start, Coord goal, vector<int> sequences)
