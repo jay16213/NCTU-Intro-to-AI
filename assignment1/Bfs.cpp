@@ -1,45 +1,43 @@
-#include "search.h"
-#include <queue>
 #include <iostream>
+#include <queue>
+#include "search.h"
 using namespace std;
 
-Coord Dir[5] = { Coord(-1, 0), Coord(1, 0), Coord(0, -1), Coord(0, 1), Coord(0, 0) };
-
-
-vector<struct step> Bfs(Coord start, Coord goal, vector<int> sequences)
+vector<struct movement> Bfs(Coord start, Coord goal, vector<int> sequences)
 {
-    //vector<struct step> solution;
-
     queue<struct state> que;
-    struct state init;
-    init.pos = start;
-    init.dep = 0;
-    init.solution.clear();
-    que.push(init);
+
+    // initialization
+    struct state init_state;
+    init_state.position = start;
+    init_state.level = 0;
+
+    que.push(init_state);
 
     while(!que.empty())
     {
         struct state current = que.front();
         que.pop();
 
+        // 5 choices at each state: left, right, up, down, skip
         for(int i = 0; i < 5; i++)
         {
+            struct movement move;
+            move.direction = i;
+            move.steps = sequences[current.level];
+
             struct state new_state;
-            new_state.pos = current.pos + Dir[i] * sequences[current.dep];
+            new_state.position = current.position + Dir[i] * move.steps;
+            new_state.level = current.level + 1;
             new_state.solution.assign(current.solution.begin(), current.solution.end());
-            new_state.dep = current.dep + 1;
-            struct step move;
-            move.dir = i;
-            move.cnt = sequences[current.dep];
             new_state.solution.push_back(move);
-            if(new_state.pos == goal)
-            {
+
+            // If we find a solution, return the solution
+            // Otherwise, push new_state to the queue and continue searching
+            if(new_state.position == goal)
                 return new_state.solution;
-            }
             else
-            {
                 que.push(new_state);
-            }
         }
     }
 }

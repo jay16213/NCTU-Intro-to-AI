@@ -14,12 +14,12 @@ Coord::Coord(int x, int y)
 
 Coord::~Coord() {}
 
-Coord Coord::operator+ (const Coord rhs)
+Coord Coord::operator+ (const Coord rhs) const
 {
     return Coord(this->x + rhs.x, this->y + rhs.y);
 }
 
-Coord Coord::operator* (const int scalar)
+Coord Coord::operator* (const int scalar) const
 {
     return Coord(this->x * scalar, this->y * scalar);
 }

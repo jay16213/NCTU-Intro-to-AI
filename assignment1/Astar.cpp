@@ -5,18 +5,16 @@
 #include <cmath>
 using namespace std;
 
-extern Coord Dir[5];
-
 inline int heuristic(int dx, int dy)
 {
     return floor(abs(dx) / 9.0) + floor(abs(dy) / 9.0);
 }
 
 struct stateA {
-    vector<struct step> solution;
-    Coord pos;
+    vector<struct movement> solution;
+    Coord position;
     int cost;
-    int dep;
+    int level;
 };
 
 class myComp {
@@ -26,8 +24,8 @@ public:
     myComp(Coord goal) { this->goal = goal; }
     bool operator() (const struct stateA& lhs, const struct stateA& rhs) const
     {
-        int total_cost_lhs = lhs.cost + heuristic(lhs.pos.x - this->goal.x, lhs.pos.y - this->goal.y);
-        int total_cost_rhs = rhs.cost + heuristic(rhs.pos.x - this->goal.x, rhs.pos.y - this->goal.y);
+        int total_cost_lhs = lhs.cost + heuristic(lhs.position.x - this->goal.x, lhs.position.y - this->goal.y);
+        int total_cost_rhs = rhs.cost + heuristic(rhs.position.x - this->goal.x, rhs.position.y - this->goal.y);
 
         return total_cost_lhs > total_cost_rhs;
     }
@@ -35,11 +33,11 @@ public:
 
 typedef priority_queue<struct stateA, vector<struct stateA>, myComp> PQueue;
 
-vector<struct step> Astar(Coord start, Coord goal, vector<int> sequences)
+vector<struct movement> Astar(Coord start, Coord goal, vector<int> sequences)
 {
     struct stateA init;
-    init.pos = start;
-    init.dep = 0;
+    init.position = start;
+    init.level = 0;
     init.solution.clear();
     init.cost = 0;
 
@@ -54,18 +52,18 @@ vector<struct step> Astar(Coord start, Coord goal, vector<int> sequences)
         for(int i = 0; i < 5; i++)
         {
             struct stateA new_state;
-            new_state.pos = current.pos + Dir[i] * sequences[current.dep];
+            new_state.position = current.position + Dir[i] * sequences[current.level];
             new_state.solution.assign(current.solution.begin(), current.solution.end());
-            new_state.dep = current.dep + 1;
+            new_state.level = current.level + 1;
 
-            struct step move;
-            move.dir = i;
-            move.cnt = sequences[current.dep];
+            struct movement move;
+            move.direction = i;
+            move.steps = sequences[current.level];
             new_state.solution.push_back(move);
 
             new_state.cost = current.cost + 1;
 
-            if(new_state.pos == goal)
+            if(new_state.position == goal)
                 return new_state.solution;
             else
                 que.push(new_state);

@@ -7,8 +7,8 @@ public:
     Coord(int x, int y);
     ~Coord();
 
-    Coord operator+ (const Coord rhs);
-    Coord operator* (const int scalar);
+    Coord operator+ (const Coord rhs) const;
+    Coord operator* (const int scalar) const;
     Coord operator= (const Coord rhs);
     Coord operator+= (const Coord rhs);
     bool operator== (const Coord rhs);
