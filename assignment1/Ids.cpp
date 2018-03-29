@@ -1,41 +1,29 @@
 #include "search.h"
 #include <stack>
+#include <cstdio>
 
-vector<struct movement> Ids(Coord start, Coord goal, vector<int> sequences)
+bool Ids(Coord start, Coord goal, vector<int> sequences, vector<struct movement> &solution, int limit, int depth)
 {
-    for(int limit = 0;;limit++)
+    if(depth >= limit) return false;
+
+    bool has_sol = false;
+    for(int i = 0; i < 5; i++)
     {
-        stack<struct state> tree;
-        struct state init;
-        init.position = start;
-        init.level = 0;
+        struct movement move;
+        move.direction = i;
+        move.steps = sequences[depth];
 
-        tree.push(init);
+        Coord go_to  = start + Dir[i] * move.steps;
+        solution.push_back(move);
 
-        while(!tree.empty())
-        {
-            struct state current = tree.top();
-            tree.pop();
+        if(go_to == goal)
+            return true;
+        else
+            has_sol = Ids(go_to, goal, sequences, solution, limit, depth + 1);
 
-            int depth = current.level + 1;
-            if(depth >= limit) continue;
-
-            for(int i = 0; i < 5; i++)
-            {
-                struct state new_state;
-                new_state.position = current.position + Dir[i] * sequences[current.level];
-                new_state.solution.assign(current.solution.begin(), current.solution.end());
-                new_state.level = depth;
-                struct movement move;
-                move.direction = i;
-                move.steps = sequences[current.level];
-                new_state.solution.push_back(move);
-
-                if(new_state.position == goal)
-                    return new_state.solution;
-                else
-                    tree.push(new_state);
-            }
-        }
+        if(has_sol) break;
+        solution.pop_back();
     }
+
+    return has_sol;
 }

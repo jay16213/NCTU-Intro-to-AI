@@ -35,7 +35,10 @@ int main()
         if(method == "BFS")
             sol = Bfs(Coord(0, 0), goal, sequences);
         else if(method == "IDS")
-            sol = Ids(Coord(0, 0), goal, sequences);
+        {
+            int limit = 1;
+            while(!Ids(Coord(0, 0), goal, sequences, sol, limit++, 0));
+        }
         else if(method == "A*")
             sol = Astar(Coord(0, 0), goal, sequences);
 

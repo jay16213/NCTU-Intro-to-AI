@@ -36,7 +36,7 @@ const Coord Dir[5] = {
 
 // 3 search algorithms
 vector<struct movement> Bfs(Coord start, Coord goal, vector<int> sequences);
-vector<struct movement> Ids(Coord start, Coord goal, vector<int> sequences);
+bool Ids(Coord start, Coord goal, vector<int> sequences, vector<struct movement> &solution, int limit, int depth);
 vector<struct movement> Astar(Coord start, Coord goal, vector<int> sequences);
 
 #endif
