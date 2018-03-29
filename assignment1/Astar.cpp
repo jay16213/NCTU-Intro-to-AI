@@ -5,10 +5,23 @@
 #include <cmath>
 using namespace std;
 
+// record the number of nodes expanded
+// initialize at main.cpp
+extern int node_expanded;
+
+#ifdef ORIGINAL_HEURISTIC
 inline int heuristic(int dx, int dy)
 {
     return floor(abs(dx) / 9.0) + floor(abs(dy) / 9.0);
 }
+#endif
+
+#ifdef IMPROVE_HEURISTIC
+inline int heuristic(int dx, int dy)
+{
+    return ceil(abs(dx) / 9.0) + ceil(abs(dy) / 9.0);
+}
+#endif
 
 struct stateA {
     vector<struct movement> solution;
@@ -48,6 +61,7 @@ vector<struct movement> Astar(Coord start, Coord goal, vector<int> sequences)
     {
         struct stateA current = que.top();
         que.pop();
+        node_expanded++;
 
         for(int i = 0; i < 5; i++)
         {

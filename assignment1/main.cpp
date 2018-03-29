@@ -8,11 +8,20 @@
 #include "Coord.h"
 using namespace std;
 
-void printSolution(vector<struct movement> sol);
+void print_solution(vector<struct movement> sol);
 
-int main()
+//record the number of nodes that a search algorithm expanded
+int node_expanded;
+
+int main(int argc, char **argv)
 {
-    ifstream in("input.txt");
+    if(argc < 2)
+    {
+        printf("Usage: ./main <input filename>\n");
+        exit(0);
+    }
+
+    ifstream in(argv[1]);
 
     string line;
     while(getline(in, line))
@@ -29,7 +38,8 @@ int main()
         while(ss >> integer) sequences.push_back(integer);
 
 
-        vector<struct movement> sol;
+        vector<struct movement> sol;  // the solution
+        node_expanded = 0;
 
         // Search the solution according to input method
         if(method == "BFS")
@@ -46,14 +56,15 @@ int main()
         printf("========================================\n");
         printf("method: %s\n", method.c_str());
         printf("goal: (%d, %d)\n", goal.x, goal.y);
-        printSolution(sol);
+        printf("node has expanded: %d\n", node_expanded);
+        print_solution(sol);
     }
 
     in.close();
     return 0;
 }
 
-void printSolution(vector<struct movement> sol)
+void print_solution(vector<struct movement> sol)
 {
     Coord pos(0, 0);
     printf("initial    (0, 0)\n");

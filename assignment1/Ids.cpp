@@ -2,9 +2,15 @@
 #include <stack>
 #include <cstdio>
 
+// record the number of nodes expanded
+// initialize at main.cpp
+extern int node_expanded;
+
 bool Ids(Coord start, Coord goal, vector<int> sequences, vector<struct movement> &solution, int limit, int depth)
 {
     if(depth >= limit) return false;
+
+    node_expanded++;
 
     bool has_sol = false;
     for(int i = 0; i < 5; i++)

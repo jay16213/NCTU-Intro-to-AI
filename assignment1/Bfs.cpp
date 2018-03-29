@@ -3,6 +3,10 @@
 #include "search.h"
 using namespace std;
 
+// record the number of nodes expanded
+// initialize at main.cpp
+extern int node_expanded;
+
 vector<struct movement> Bfs(Coord start, Coord goal, vector<int> sequences)
 {
     queue<struct state> que;
@@ -18,6 +22,7 @@ vector<struct movement> Bfs(Coord start, Coord goal, vector<int> sequences)
     {
         struct state current = que.front();
         que.pop();
+        node_expanded++;
 
         // 5 choices at each state: left, right, up, down, skip
         for(int i = 0; i < 5; i++)
