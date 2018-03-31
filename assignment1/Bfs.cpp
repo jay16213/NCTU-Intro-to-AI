@@ -37,7 +37,7 @@ vector<struct movement> Bfs(Coord start, Coord goal, vector<int> sequences)
             move.steps = sequences[current.level];
 
             struct state new_state;
-            new_state.position = current.position + Dir[i] * move.steps;
+            new_state.position = current.position + Direction_vec[i] * move.steps;
             new_state.level = current.level + 1;
             new_state.solution.assign(current.solution.begin(), current.solution.end());
             new_state.solution.push_back(move);

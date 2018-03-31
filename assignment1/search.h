@@ -17,7 +17,7 @@ struct movement {
     int steps;                              // number of steps this movement moves
 };
 
-// A state is a node on the search tree, stored the infofmation we need
+// A state is a node on the search tree, stored the information we need
 struct state {
     vector<struct movement> solution;       // a possible solution path
     Coord position;                         // current position
@@ -25,7 +25,7 @@ struct state {
 };
 
 // 5 choice at each node
-const Coord Dir[5] = {
+const Coord Direction_vec[5] = {
     Coord(-1, 0),       // left
     Coord(1, 0),        // right
     Coord(0, -1),       // up

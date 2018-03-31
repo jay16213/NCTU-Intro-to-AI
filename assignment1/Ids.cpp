@@ -36,7 +36,7 @@ bool Dls(Coord start, Coord goal, vector<int> sequences, vector<struct movement>
         move.direction = i;
         move.steps = sequences[depth];
 
-        Coord go_to  = start + Dir[i] * move.steps;
+        Coord go_to  = start + Direction_vec[i] * move.steps;
         solution.push_back(move);
 
         // If we find a solution, return

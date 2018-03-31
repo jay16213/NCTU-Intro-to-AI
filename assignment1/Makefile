@@ -1,5 +1,5 @@
 CC = g++
-CODE = main.cpp Coord.h Coord.cpp Bfs.cpp Ids.cpp Astar.cpp
+CODE = main.cpp search.h Coord.h Coord.cpp Bfs.cpp Ids.cpp Astar.cpp
 
 default: main main2
 
