@@ -11,7 +11,7 @@ using namespace std;
 #define DOWN  3
 #define SKIP  4
 
-//
+
 struct movement {
     int direction;                          // the move direction
     int steps;                              // number of steps this movement moves
@@ -36,7 +36,8 @@ const Coord Dir[5] = {
 
 // 3 search algorithms
 vector<struct movement> Bfs(Coord start, Coord goal, vector<int> sequences);
-bool Ids(Coord start, Coord goal, vector<int> sequences, vector<struct movement> &solution, int limit, int depth);
+vector<struct movement> Ids(Coord start, Coord goal, vector<int> sequences);
+bool Dls(Coord start, Coord goal, vector<int> sequences, vector<struct movement> &solution, int limit, int depth);
 vector<struct movement> Astar(Coord start, Coord goal, vector<int> sequences);
 
 #endif

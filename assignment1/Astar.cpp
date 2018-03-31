@@ -23,6 +23,7 @@ inline int heuristic(int dx, int dy)
 }
 #endif
 
+// the state of A*
 struct stateA {
     vector<struct movement> solution;
     Coord position;
@@ -30,6 +31,8 @@ struct stateA {
     int level;
 };
 
+
+// a compare function for priority queue
 class myComp {
     Coord goal;
 
@@ -61,22 +64,29 @@ vector<struct movement> Astar(Coord start, Coord goal, vector<int> sequences)
     {
         struct stateA current = que.top();
         que.pop();
+
+        //no solution
+        if(current.level >= sequences.size())
+            return vector<struct movement>();
+
         node_expanded++;
 
+        // 5 choices at each state: left, right, up, down, skip
         for(int i = 0; i < 5; i++)
         {
-            struct stateA new_state;
-            new_state.position = current.position + Dir[i] * sequences[current.level];
-            new_state.solution.assign(current.solution.begin(), current.solution.end());
-            new_state.level = current.level + 1;
-
             struct movement move;
             move.direction = i;
             move.steps = sequences[current.level];
+
+            struct stateA new_state;
+            new_state.position = current.position + Dir[i] * move.steps;
+            new_state.level = current.level + 1;
+            new_state.cost = current.cost + 1;
+            new_state.solution.assign(current.solution.begin(), current.solution.end());
             new_state.solution.push_back(move);
 
-            new_state.cost = current.cost + 1;
-
+            // If we find a solution, return the solution
+            // Otherwise, push new_state to the queue and continue searching
             if(new_state.position == goal)
                 return new_state.solution;
             else

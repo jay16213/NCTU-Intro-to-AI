@@ -22,6 +22,11 @@ vector<struct movement> Bfs(Coord start, Coord goal, vector<int> sequences)
     {
         struct state current = que.front();
         que.pop();
+
+        //no solution
+        if(current.level >= sequences.size())
+            return vector<struct movement>();
+
         node_expanded++;
 
         // 5 choices at each state: left, right, up, down, skip

@@ -45,10 +45,7 @@ int main(int argc, char **argv)
         if(method == "BFS")
             sol = Bfs(Coord(0, 0), goal, sequences);
         else if(method == "IDS")
-        {
-            int limit = 1;
-            while(!Ids(Coord(0, 0), goal, sequences, sol, limit++, 0));
-        }
+            sol = Ids(Coord(0, 0), goal, sequences);
         else if(method == "A*")
             sol = Astar(Coord(0, 0), goal, sequences);
 
@@ -66,6 +63,12 @@ int main(int argc, char **argv)
 
 void print_solution(vector<struct movement> sol)
 {
+    if(sol.empty())
+    {
+        printf("No solution!\n");
+        return;
+    }
+
     Coord pos(0, 0);
     printf("initial    (0, 0)\n");
     for(int i = 0; i < sol.size(); i++)
