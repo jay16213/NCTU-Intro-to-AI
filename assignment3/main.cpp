@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     for(int i = 0; i < forest.training_data.size(); i++)
     {
         int p = forest.classify(forest.training_data[i]);
-        printf("expected: %s\n", forest.training_data[i].label.str.c_str());
+        // printf("expected: %s\n", forest.training_data[i].label.str.c_str());
         if(p == forest.training_data[i].label.id)
             right++;
     }

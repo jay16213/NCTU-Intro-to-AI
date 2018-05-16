@@ -35,17 +35,6 @@ void TreeNode::setNumOfAttributes(int value)
     return;
 }
 
-int TreeNode::count()
-{
-    int result = 1;
-    if(left_child != NULL)
-        result += left_child->count();
-    if(right_child != NULL)
-        result += right_child->count();
-
-    return result;
-}
-
 void TreeNode::split(const vector<Data> src, Attribute threshold, vector<Data> &less, vector<Data> &greater)
 {
     less.clear();

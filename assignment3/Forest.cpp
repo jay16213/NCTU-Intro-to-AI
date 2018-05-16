@@ -1,4 +1,5 @@
 #include "Forest.hpp"
+#include <iostream>
 using namespace std;
 
 Forest::Forest() {}
@@ -9,7 +10,11 @@ Forest::Forest(int n_trees, int n_features)
     this->n_features = n_features;
 }
 
-Forest::~Forest() {}
+Forest::~Forest()
+{
+    for(auto tree : trees)
+        delete tree;
+}
 
 void Forest::loadTrainingData(const char *training_file, int num_of_features)
 {
@@ -46,9 +51,11 @@ void Forest::loadTrainingData(const char *training_file, int num_of_features)
     }
 
     for(int i = 0; i < n_trees; i++)
-        trees.push_back(TreeNode(n_features));
+        trees.push_back(new TreeNode(n_features));
 
-    printf("total data: %d, attr: %d, classes: %d\n", training_data.size(), n_features, classes.size());
+    cout << "total data: " << training_data.size();
+    cout << " attribute: " << n_features;
+    cout << " classes: " << classes.size() << endl;
     fin.close();
     return;
 }
@@ -64,7 +71,7 @@ void Forest::train()
     {
         vector<Data> training_sample = randomSubset(subset_size);
         printf("training tree[%d]\n", t);
-        trees[t].train(training_sample, classes.size(), 0);
+        trees[t]->train(training_sample, classes.size(), 0);
     }
 
     printf("-----finish training-----\n");
@@ -89,7 +96,7 @@ int Forest::classify(Data data)
     vector<int> class_vote(classes.size(), 0);
     for(auto tree : trees)
     {
-        vector<double> distributions = tree.classify(data);
+        vector<double> distributions = tree->classify(data);
         int predict = predictClass(distributions);
         assert(predict >= 0);
         assert(predict < class_vote.size());
@@ -109,7 +116,7 @@ int Forest::classify(Data data)
         }
     }
 
-    printf("predict: %s, prob: %lf, ", classes[predict_class].c_str(), (double) max_vote / total_vote);
+    // printf("predict: %s, prob: %lf, ", classes[predict_class].c_str(), (double) max_vote / total_vote);
     return predict_class;
 }
 

@@ -28,10 +28,11 @@ public:
     TreeNode();
     TreeNode(int num_of_attributes);
     ~TreeNode();
+
     void setNumOfAttributes(int value);
     void train(vector<Data> data, int n_classes, int dep);
-    int count();
     vector<double> classify(Data data);
+
 private:
     vector<Data> randomSampling(const vector<Data> data);
     vector<double> extractAttribute(const vector<Data> data, int attribute_id);
@@ -49,4 +50,5 @@ private:
 vector<double> computePValue(const vector<Data> classes, int num_of_classes);
 double giniImpurity(const vector<Data> classes, int num_of_classes);
 double totalImpurity(const vector<Data> less, const vector<Data> greater, int num_of_classes);
+
 #endif
