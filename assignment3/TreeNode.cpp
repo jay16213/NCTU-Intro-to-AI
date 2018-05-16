@@ -85,7 +85,7 @@ vector<double> TreeNode::computeThresholdValues(vector<double> attribute)
 
     for(int i = 0; i < attribute.size() - 1; i++)
     {
-        double t = (attribute[i] + attribute[i+1]) / 2;
+        double t = (attribute[i] + attribute[i+1]) / 2.0;
         thresh.push_back(t);
     }
 
@@ -94,7 +94,7 @@ vector<double> TreeNode::computeThresholdValues(vector<double> attribute)
 
 void TreeNode::train(vector<Data> data, int n_classes, int dep)
 {
-    if(data.size() <= 1)
+    if(data.size() <= 1 || dep >= 10)
     {
         distribution = computePValue(data, n_classes);
         return;
@@ -118,10 +118,10 @@ void TreeNode::train(vector<Data> data, int n_classes, int dep)
         {
             vector<Data> less, greater;
             thresh.value = threshold_value;
-            // printf("spilt on attr[%d]\n", thresh.id);
+
             this->split(data, thresh, less, greater);
             double impurity = totalImpurity(less, greater, n_classes);
-
+            // printf("%lf\n", impurity);
             if(impurity < min_impurity)
             {
                 min_impurity = impurity;
@@ -174,6 +174,15 @@ vector<double> TreeNode::classify(Data data)
 
 vector<double> computePValue(const vector<Data> classes, int num_of_classes)
 {
+    if(classes.size() == 1)
+    {
+        vector<double> p_values(num_of_classes, 0);
+        p_values[classes.front().class_id] = 1.0;
+        return p_values;
+    }
+
+    assert(classes.size() > 0);
+
     vector<int> count(num_of_classes, 0);
     for(auto c : classes)
     {
@@ -183,10 +192,8 @@ vector<double> computePValue(const vector<Data> classes, int num_of_classes)
     }
 
     vector<double> p_values;
-
     for(auto cnt : count)
     {
-        assert(classes.size() > 0);
         double p = ((double) cnt) / classes.size();
         p_values.push_back(p);
     }
@@ -212,6 +219,7 @@ double totalImpurity(const vector<Data> less, const vector<Data> greater, int nu
     double gini_less = giniImpurity(less, num_of_classes);
     double gini_greater = giniImpurity(greater, num_of_classes);
 
-    double total_impurity = less.size()*gini_less + greater.size()*gini_greater;
+    int total = less.size() + greater.size();
+    double total_impurity = ((double)less.size() / total)*gini_less + ((double)greater.size() / total)*gini_greater;
     return total_impurity;
 }

@@ -14,19 +14,23 @@ public:
     Forest(int n_trees, int n_features);
     ~Forest();
 
-    void loadTrainingData(const char *training_file, int number_of_attributes);
+    void loadTrainingSample(const string training_file, int number_of_attributes);
     void train();
     int classify(Data data);
 
+    int n_samples;
+    vector<Data> training_sample;
     vector<Data> training_data;
+    vector<Data> validation_data;
+    vector<string> class_name;
 
 private:
+    void chooseValidationData(unsigned int size);
     vector<Data> randomSubset(unsigned int size);
 
     int n_trees;
     int n_features;
     vector<TreeNode*> trees;
-    vector<string> class_name;
 };
 
 void sumUp(vector<double> dest, vector<double> src);

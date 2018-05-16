@@ -1,5 +1,6 @@
 #include "Forest.hpp"
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 Forest::Forest() {}
@@ -16,12 +17,13 @@ Forest::~Forest()
         delete tree;
 }
 
-void Forest::loadTrainingData(const char *training_file, int num_of_features)
+void Forest::loadTrainingSample(const string training_file, int num_of_features)
 {
-    printf("Loading training data from %s\n", training_file);
+    printf("Loading training data from %s\n", training_file.c_str());
     ifstream fin(training_file);
     this->n_features = num_of_features;
 
+    this->n_samples = 0;
     int class_id = -1;
     string line;
     while(getline(fin, line))
@@ -46,16 +48,42 @@ void Forest::loadTrainingData(const char *training_file, int num_of_features)
         }
 
         data.class_id = class_id;
-        training_data.push_back(data);
+        training_sample.push_back(data);
+        n_samples++;
     }
 
     for(int i = 0; i < n_trees; i++)
         trees.push_back(new TreeNode(n_features));
 
-    cout << "total data: " << training_data.size();
+    cout << "total data: " << training_sample.size();
     cout << " attribute: " << n_features;
     cout << " classes: " << class_name.size() << endl;
     fin.close();
+
+    chooseValidationData(floor(n_samples*0.2));
+    return;
+}
+
+void Forest::chooseValidationData(unsigned int size)
+{
+    vector<bool> has_choose(n_samples, false);
+    validation_data.clear();
+    for(int i = 0; i < size; i++)
+    {
+        int rand_index = rand() % training_sample.size();
+        while(has_choose[rand_index])
+            rand_index = rand() % training_sample.size();
+
+        has_choose[rand_index] = true;
+        validation_data.push_back(training_sample[rand_index]);
+    }
+
+    for(int i = 0; i < n_samples; i++)
+    {
+        if(has_choose[i]) continue;
+        training_data.push_back(training_sample[i]);
+    }
+
     return;
 }
 
@@ -63,14 +91,16 @@ void Forest::train()
 {
     printf("-----forest training-----\n");
     // 80-20 rule: 80% of data used to training
-    int subset_size = (training_data.size() * 8) / 10;
+    // TODO: check size
+    // int subset_size = (training_data.size() * 8) / 10;
+    int subset_size = training_data.size();
     printf("tree bagging: training tree with %d elements\n", subset_size);
 
     for(int t= 0; t < n_trees; t++)
     {
-        vector<Data> training_sample = randomSubset(subset_size);
+        vector<Data> training_data_ = randomSubset(subset_size);
         printf("training tree[%d]\n", t);
-        trees[t]->train(training_sample, class_name.size(), 0);
+        trees[t]->train(training_data_, class_name.size(), 0);
     }
 
     printf("-----finish training-----\n");
@@ -115,7 +145,6 @@ int Forest::classify(Data data)
         }
     }
 
-    // printf("predict: %s, prob: %lf, ", classes[predict_class].c_str(), (double) max_vote / total_vote);
     return predict_class;
 }
 
