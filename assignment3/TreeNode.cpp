@@ -139,21 +139,16 @@ void TreeNode::train(vector<Data> data, int n_classes, int dep)
 
     // save best threshold
     this->threshold = best_thresh;
-
     printf("[%d] select threshold %lf\n", dep, threshold.value);
 
     vector<Data> less, greater;
     this->split(data, this->threshold, less, greater);
 
-    // printf("train left child\n");
     left_child = new TreeNode(num_of_attributes);
     left_child->train(less, n_classes, dep + 1);
-    // printf("train right child\n");
     right_child = new TreeNode(num_of_attributes);
     right_child->train(greater, n_classes, dep + 1);
 
-    assert(left_child != NULL);
-    assert(right_child != NULL);
     return;
 }
 
@@ -182,9 +177,9 @@ vector<double> computePValue(const vector<Data> classes, int num_of_classes)
     vector<int> count(num_of_classes, 0);
     for(auto c : classes)
     {
-        assert(c.label.id >= 0);
-        assert(c.label.id < num_of_classes);
-        count[c.label.id]++;
+        assert(c.class_id >= 0);
+        assert(c.class_id < num_of_classes);
+        count[c.class_id]++;
     }
 
     vector<double> p_values;

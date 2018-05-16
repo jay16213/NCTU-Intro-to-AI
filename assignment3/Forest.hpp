@@ -26,11 +26,11 @@ private:
     int n_trees;
     int n_features;
     vector<TreeNode*> trees;
-    vector<string> classes;
+    vector<string> class_name;
 };
 
 void sumUp(vector<double> dest, vector<double> src);
-int findLabel(string label, vector<string> classes);
+int findLabel(string label, vector<string> class_name);
 int predictClass(vector<double> distributions);
 
 #endif

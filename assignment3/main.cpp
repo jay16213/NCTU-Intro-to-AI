@@ -12,7 +12,7 @@ using namespace std;
 bool test(Forest *forest, Data test_data, vector<string> classes)
 {
     int predict_class = forest->classify(test_data);
-    int expected_class = test_data.label.id;
+    int expected_class = test_data.class_id;
     if(predict_class == expected_class)
     {
         printf("predict: %d, expected: %d\n", predict_class, expected_class);
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     {
         int p = forest.classify(forest.training_data[i]);
         // printf("expected: %s\n", forest.training_data[i].label.str.c_str());
-        if(p == forest.training_data[i].label.id)
+        if(p == forest.training_data[i].class_id)
             right++;
     }
 

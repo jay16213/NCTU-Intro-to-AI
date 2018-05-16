@@ -22,7 +22,7 @@ void Forest::loadTrainingData(const char *training_file, int num_of_features)
     ifstream fin(training_file);
     this->n_features = num_of_features;
 
-    int label_id = -1;
+    int class_id = -1;
     string line;
     while(getline(fin, line))
     {
@@ -36,17 +36,16 @@ void Forest::loadTrainingData(const char *training_file, int num_of_features)
             data.attributes.push_back(tmp);
         }
 
-        string label_str;
-        ss >> label_str;
+        string class_str;
+        ss >> class_str;
 
-        if(findLabel(label_str, classes) == -1)
+        if(findLabel(class_str, class_name) == -1)
         {
-            classes.push_back(label_str);
-            label_id++;
+            class_name.push_back(class_str);
+            class_id++;
         }
 
-        data.label.id = label_id;
-        data.label.str = label_str;
+        data.class_id = class_id;
         training_data.push_back(data);
     }
 
@@ -55,7 +54,7 @@ void Forest::loadTrainingData(const char *training_file, int num_of_features)
 
     cout << "total data: " << training_data.size();
     cout << " attribute: " << n_features;
-    cout << " classes: " << classes.size() << endl;
+    cout << " classes: " << class_name.size() << endl;
     fin.close();
     return;
 }
@@ -71,7 +70,7 @@ void Forest::train()
     {
         vector<Data> training_sample = randomSubset(subset_size);
         printf("training tree[%d]\n", t);
-        trees[t]->train(training_sample, classes.size(), 0);
+        trees[t]->train(training_sample, class_name.size(), 0);
     }
 
     printf("-----finish training-----\n");
@@ -93,7 +92,7 @@ vector<Data> Forest::randomSubset(unsigned int size)
 
 int Forest::classify(Data data)
 {
-    vector<int> class_vote(classes.size(), 0);
+    vector<int> class_vote(class_name.size(), 0);
     for(auto tree : trees)
     {
         vector<double> distributions = tree->classify(data);
@@ -136,20 +135,11 @@ int predictClass(vector<double> distributions)
     return predicted_class;
 }
 
-void sumUp(vector<double> dest, vector<double> src)
+int findLabel(string label, vector<string> class_name)
 {
-    assert(dest.size() == src.size());
-    for(int i = 0; i < dest.size(); i++)
-        dest[i] += src[i];
-
-    return;
-}
-
-int findLabel(string label, vector<string> classes)
-{
-    for(int i = 0; i < classes.size(); i++)
+    for(int i = 0; i < class_name.size(); i++)
     {
-        if(classes[i] == label)
+        if(class_name[i] == label)
             return i;
     }
 

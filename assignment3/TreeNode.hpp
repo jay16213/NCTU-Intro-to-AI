@@ -8,11 +8,6 @@
 #include <string>
 using namespace std;
 
-struct Label {
-    int id;
-    string str;
-};
-
 struct Attribute {
     int id;
     double value;
@@ -20,7 +15,7 @@ struct Attribute {
 
 struct Data {
     vector<Attribute> attributes;
-    Label label;
+    int class_id;
 };
 
 class TreeNode {
