@@ -94,6 +94,8 @@ vector<double> TreeNode::computeThresholdValues(vector<double> attribute)
 
 void TreeNode::train(vector<Data> data, int n_classes, int dep)
 {
+    assert(data.size() > 0);
+
     if(data.size() <= 1 || dep >= 10)
     {
         distribution = computePValue(data, n_classes);
@@ -103,22 +105,21 @@ void TreeNode::train(vector<Data> data, int n_classes, int dep)
     double min_impurity = 1000000000.0;
     Attribute best_thresh;
 
-    // printf("bagging from %d attributes\n", num_of_attributes);
     // TODO: attribute bagging
+    vector<double> attribute(data.size(), 0.0), threshold_values(data.size(), 0.0);
     for(int i = 0; i < num_of_attributes; i++)
     {
-        vector<double> attribute = extractAttribute(data, i);
-        assert(attribute.size() > 0);
-        vector<double> threshold_values = computeThresholdValues(attribute);
+        attribute = extractAttribute(data, i);
+        threshold_values = computeThresholdValues(attribute);
         assert(threshold_values.size() > 0);
+        printf("thresh: %lu\n", threshold_values.size());
 
         Attribute thresh;
         thresh.id = i;
+        vector<Data> less(data.size()), greater(data.size());
         for(auto threshold_value : threshold_values)
         {
-            vector<Data> less, greater;
             thresh.value = threshold_value;
-
             this->split(data, thresh, less, greater);
             double impurity = totalImpurity(less, greater, n_classes);
             // printf("%lf\n", impurity);
@@ -129,9 +130,18 @@ void TreeNode::train(vector<Data> data, int n_classes, int dep)
                 best_thresh.value = threshold_value;
             }
         }
+        printf("finish: %d\n", i);
     }
 
     if(min_impurity <= MIN_IMPURITY)
+    {
+        distribution = computePValue(data, n_classes);
+        return;
+    }
+
+    vector<Data> less, greater;
+    this->split(data, best_thresh, less, greater);
+    if(less.empty() || greater.empty())
     {
         distribution = computePValue(data, n_classes);
         return;
@@ -141,11 +151,10 @@ void TreeNode::train(vector<Data> data, int n_classes, int dep)
     this->threshold = best_thresh;
     printf("[%d] select threshold %lf\n", dep, threshold.value);
 
-    vector<Data> less, greater;
-    this->split(data, this->threshold, less, greater);
-
+    // printf("less: %lu, greater: %lu\n", less.size(), greater.size());
     left_child = new TreeNode(num_of_attributes);
     left_child->train(less, n_classes, dep + 1);
+
     right_child = new TreeNode(num_of_attributes);
     right_child->train(greater, n_classes, dep + 1);
 
@@ -201,7 +210,7 @@ vector<double> computePValue(const vector<Data> classes, int num_of_classes)
     return p_values;
 }
 
-double giniImpurity(const vector<Data> classes, int num_of_classes)
+inline double giniImpurity(const vector<Data> classes, int num_of_classes)
 {
     if(classes.size() == 0) return 0.0;
 
@@ -214,7 +223,7 @@ double giniImpurity(const vector<Data> classes, int num_of_classes)
     return result;
 }
 
-double totalImpurity(const vector<Data> less, const vector<Data> greater, int num_of_classes)
+inline double totalImpurity(const vector<Data> less, const vector<Data> greater, int num_of_classes)
 {
     double gini_less = giniImpurity(less, num_of_classes);
     double gini_greater = giniImpurity(greater, num_of_classes);

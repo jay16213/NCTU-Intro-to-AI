@@ -43,7 +43,7 @@ private:
 };
 
 vector<double> computePValue(const vector<Data> classes, int num_of_classes);
-double giniImpurity(const vector<Data> classes, int num_of_classes);
-double totalImpurity(const vector<Data> less, const vector<Data> greater, int num_of_classes);
+inline double giniImpurity(const vector<Data> classes, int num_of_classes);
+inline double totalImpurity(const vector<Data> less, const vector<Data> greater, int num_of_classes);
 
 #endif

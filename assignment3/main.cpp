@@ -28,9 +28,11 @@ int main(int argc, char **argv)
 
     int n_trees = 16;
     int n_features = 1;
+    int n_attribute_bagging = 1;
     string training_file;
     int c;
-    while((c = getopt(argc, argv, "t:n:f:")) != -1)
+    // TODO: validation subset size option, min impurity option
+    while((c = getopt(argc, argv, "t:n:f:a:")) != -1)
     {
         switch(c)
         {
@@ -46,6 +48,9 @@ int main(int argc, char **argv)
                 assert(n_features > 0);
                 break;
 
+            case 'a':
+                n_attribute_bagging = atoi(optarg);
+                assert(n_attribute_bagging > 0);
             default:
                 exit(1);
         }
