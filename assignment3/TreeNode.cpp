@@ -1,7 +1,7 @@
 #include "TreeNode.hpp"
 using namespace std;
 
-#define MIN_IMPURITY 0.01
+#define MIN_IMPURITY 0.001
 
 TreeNode::TreeNode()
 {

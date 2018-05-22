@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <cassert>
 #include <cstdlib>
+#include <fstream>
 #include <cstdio>
 #include <vector>
 #include <string>
@@ -65,7 +66,7 @@ int main(int argc, char **argv)
                 break;
             case 's':
                 p_validations = atof(optarg);
-                assert(p_validations > 0.0);
+                assert(p_validations >= 0.0);
                 break;
             default:
                 exit(1);
@@ -100,9 +101,15 @@ int main(int argc, char **argv)
             validation_data_right++;
     }
 
+    double training_right_rate = ((double) training_data_right) / training_data_size;
+    double validation_right_rate = ((double) validation_data_right) / validation_data_size;
+
     printf("============================================\n");
     printf(" total test data: %d (%d for training, %d for validation)\n", forest.n_samples, training_data_size, validation_data_size);
-    printf(" training: %lf, validation: %lf\n", (double) training_data_right / training_data_size, (double) validation_data_right / validation_data_size);
+    printf(" training: %lf, validation: %lf\n", training_right_rate, validation_right_rate);
     printf("============================================\n");
+
+    // for shell script
+    printf("get %lf %lf\n", training_right_rate, validation_right_rate);
     return 0;
 }
