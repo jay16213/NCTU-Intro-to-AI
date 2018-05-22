@@ -24,12 +24,12 @@ public:
     TreeNode(int num_of_attributes);
     ~TreeNode();
 
-    void setNumOfAttributes(int value);
-    void train(vector<Data> data, int n_classes, int dep);
+    void train(vector<Data> data, int n_classes, int n_attribute_bagging, int dep);
     vector<double> classify(Data data);
 
 private:
     vector<Data> randomSampling(const vector<Data> data);
+    vector<int> attributeBagging(int n_attribute_bagging);
     vector<double> extractAttribute(const vector<Data> data, int attribute_id);
     vector<double> computeThresholdValues(vector<double> attribute);
     void split(const vector<Data> src, Attribute threshold, vector<Data> &less, vector<Data> &greater);

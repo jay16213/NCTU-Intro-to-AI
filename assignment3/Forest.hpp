@@ -11,7 +11,7 @@ using namespace std;
 class Forest {
 public:
     Forest();
-    Forest(int n_trees, int n_features);
+    Forest(int n_trees, int n_features, int n_attribute_bagging);
     ~Forest();
 
     void loadTrainingSample(const string training_file, int number_of_attributes);
@@ -30,6 +30,7 @@ private:
 
     int n_trees;
     int n_features;
+    int n_attribute_bagging;
     vector<TreeNode*> trees;
 };
 

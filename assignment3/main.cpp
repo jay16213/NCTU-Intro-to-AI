@@ -47,16 +47,16 @@ int main(int argc, char **argv)
                 n_features = atoi(optarg);
                 assert(n_features > 0);
                 break;
-
             case 'a':
                 n_attribute_bagging = atoi(optarg);
                 assert(n_attribute_bagging > 0);
+                break;
             default:
                 exit(1);
         }
     }
 
-    Forest forest(n_trees, n_features);
+    Forest forest(n_trees, n_features, n_attribute_bagging);
     forest.loadTrainingSample(training_file, n_features);
     forest.train();
 
