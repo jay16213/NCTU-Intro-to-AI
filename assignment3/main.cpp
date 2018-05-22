@@ -25,6 +25,7 @@ bool test(Forest *forest, Data test_data, vector<string> class_name)
 int main(int argc, char **argv)
 {
     srand(time(NULL));
+    printf("pid: %d\n", getpid());
 
     int n_trees = 16;
     int n_features = 1;
@@ -47,16 +48,16 @@ int main(int argc, char **argv)
                 n_features = atoi(optarg);
                 assert(n_features > 0);
                 break;
-
             case 'a':
                 n_attribute_bagging = atoi(optarg);
                 assert(n_attribute_bagging > 0);
+                break;
             default:
                 exit(1);
         }
     }
 
-    Forest forest(n_trees, n_features);
+    Forest forest(n_trees, n_features, n_attribute_bagging);
     forest.loadTrainingSample(training_file, n_features);
     forest.train();
 

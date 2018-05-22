@@ -5,10 +5,14 @@ using namespace std;
 
 Forest::Forest() {}
 
-Forest::Forest(int n_trees, int n_features)
+Forest::Forest(int n_trees, int n_features, int n_attribute_bagging)
 {
     this->n_trees = n_trees;
     this->n_features = n_features;
+    this->n_attribute_bagging = n_attribute_bagging;
+
+    for(int i = 0; i < n_trees; i++)
+        trees.push_back(new TreeNode(n_features));
 }
 
 Forest::~Forest()
@@ -52,9 +56,6 @@ void Forest::loadTrainingSample(const string training_file, int num_of_features)
         n_samples++;
     }
 
-    for(int i = 0; i < n_trees; i++)
-        trees.push_back(new TreeNode(n_features));
-
     cout << "total data: " << training_sample.size();
     cout << " attribute: " << n_features;
     cout << " classes: " << class_name.size() << endl;
@@ -94,16 +95,21 @@ void Forest::train()
     // TODO: check size
     // int subset_size = (training_data.size() * 8) / 10;
     int subset_size = training_data.size();
-    printf("tree bagging: training tree with %d elements\n", subset_size);
 
     for(int t= 0; t < n_trees; t++)
     {
         vector<Data> training_data_ = randomSubset(subset_size);
         printf("training tree[%d]\n", t);
-        trees[t]->train(training_data_, class_name.size(), 0);
+        trees[t]->train(training_data_, class_name.size(), n_attribute_bagging, 0);
     }
 
     printf("-----finish training-----\n");
+    printf("##########################################\n");
+    printf(" training summary\n");
+    printf(" trained %d cart\n", n_trees);
+    printf(" training each tree with %d elements\n", subset_size);
+    printf(" training each node using %d attributes\n", n_attribute_bagging);
+    printf("##########################################\n\n");
     return;
 }
 
