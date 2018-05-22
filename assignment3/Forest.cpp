@@ -5,11 +5,12 @@ using namespace std;
 
 Forest::Forest() {}
 
-Forest::Forest(int n_trees, int n_features, int n_attribute_bagging)
+Forest::Forest(int n_trees, int n_features, int n_attribute_bagging, double p_validations)
 {
     this->n_trees = n_trees;
     this->n_features = n_features;
     this->n_attribute_bagging = n_attribute_bagging;
+    this->p_validations = p_validations;
 
     for(int i = 0; i < n_trees; i++)
         trees.push_back(new TreeNode(n_features));
@@ -21,11 +22,10 @@ Forest::~Forest()
         delete tree;
 }
 
-void Forest::loadTrainingSample(const string training_file, int num_of_features)
+void Forest::loadTrainingSample(const string training_file)
 {
     printf("Loading training data from %s\n", training_file.c_str());
     ifstream fin(training_file);
-    this->n_features = num_of_features;
 
     this->n_samples = 0;
     int class_id = -1;
@@ -34,7 +34,7 @@ void Forest::loadTrainingSample(const string training_file, int num_of_features)
     {
         stringstream ss(line);
         Data data;
-        for(int i = 0; i < num_of_features; i++)
+        for(int i = 0; i < this->n_features; i++)
         {
             Attribute tmp;
             tmp.id = i;
@@ -61,7 +61,7 @@ void Forest::loadTrainingSample(const string training_file, int num_of_features)
     cout << " classes: " << class_name.size() << endl;
     fin.close();
 
-    chooseValidationData(floor(n_samples*0.2));
+    chooseValidationData(floor(n_samples*p_validations));
     return;
 }
 
@@ -91,9 +91,6 @@ void Forest::chooseValidationData(unsigned int size)
 void Forest::train()
 {
     printf("-----forest training-----\n");
-    // 80-20 rule: 80% of data used to training
-    // TODO: check size
-    // int subset_size = (training_data.size() * 8) / 10;
     int subset_size = training_data.size();
 
     for(int t= 0; t < n_trees; t++)
@@ -107,6 +104,8 @@ void Forest::train()
     printf("##########################################\n");
     printf(" training summary\n");
     printf(" trained %d cart\n", n_trees);
+    printf(" classes: %lu\n", class_name.size());
+    printf(" each data has %d attributes\n", n_features);
     printf(" training each tree with %d elements\n", subset_size);
     printf(" training each node using %d attributes\n", n_attribute_bagging);
     printf("##########################################\n\n");

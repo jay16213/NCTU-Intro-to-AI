@@ -1,14 +1,10 @@
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cstdlib>
-#include <cstdio>
 #include <unistd.h>
 #include <cassert>
+#include <cstdlib>
+#include <cstdio>
 #include <vector>
 #include <string>
-#include <ctime>
-#include <map>
 #include "Forest.hpp"
 using namespace std;
 
@@ -22,21 +18,36 @@ bool test(Forest *forest, Data test_data, vector<string> class_name)
     return predict_class == expected_class;
 }
 
+void helpMsg()
+{
+    printf("Usage: ./random_forest -t <training_file> -f <number of attributes> [options]\n");
+    printf("Options: \n");
+    printf("    -n: number of trees the random forest use (default: 16)\n");
+    printf("    -f: number of attributes the training set has\n");
+    printf("    -a: number of attributes each node will bagging while training\n");
+    printf("    -s: proportion of the validation data you want to use (default: 0.2)\n");
+    return;
+}
+
 int main(int argc, char **argv)
 {
     srand(time(NULL));
-    printf("pid: %d\n", getpid());
 
     int n_trees = 16;
-    int n_features = 1;
+    int n_features = -1;
     int n_attribute_bagging = 1;
-    string training_file;
+    double p_validations = 0.2;
+    string training_file = "";
     int c;
     // TODO: validation subset size option, min impurity option
-    while((c = getopt(argc, argv, "t:n:f:a:")) != -1)
+    while((c = getopt(argc, argv, "t:n:f:a:s:h")) != -1)
     {
         switch(c)
         {
+            case 'h':
+                helpMsg();
+                exit(0);
+                break;
             case 't':
                 training_file = optarg;
                 break;
@@ -52,13 +63,25 @@ int main(int argc, char **argv)
                 n_attribute_bagging = atoi(optarg);
                 assert(n_attribute_bagging > 0);
                 break;
+            case 's':
+                p_validations = atof(optarg);
+                assert(p_validations > 0.0);
+                break;
             default:
                 exit(1);
         }
     }
 
-    Forest forest(n_trees, n_features, n_attribute_bagging);
-    forest.loadTrainingSample(training_file, n_features);
+    if(training_file == "" || n_features == -1)
+    {
+        helpMsg();
+        exit(0);
+    }
+
+    printf("pid: %d\n", getpid());
+
+    Forest forest(n_trees, n_features, n_attribute_bagging, p_validations);
+    forest.loadTrainingSample(training_file);
     forest.train();
 
     int training_data_right = 0;

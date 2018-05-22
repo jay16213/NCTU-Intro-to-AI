@@ -11,10 +11,10 @@ using namespace std;
 class Forest {
 public:
     Forest();
-    Forest(int n_trees, int n_features, int n_attribute_bagging);
+    Forest(int n_trees, int n_features, int n_attribute_bagging, double p_validations);
     ~Forest();
 
-    void loadTrainingSample(const string training_file, int number_of_attributes);
+    void loadTrainingSample(const string training_file);
     void train();
     int classify(Data data);
 
@@ -31,6 +31,7 @@ private:
     int n_trees;
     int n_features;
     int n_attribute_bagging;
+    double p_validations;
     vector<TreeNode*> trees;
 };
 
