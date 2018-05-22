@@ -25,6 +25,7 @@ bool test(Forest *forest, Data test_data, vector<string> class_name)
 int main(int argc, char **argv)
 {
     srand(time(NULL));
+    printf("pid: %d\n", getpid());
 
     int n_trees = 16;
     int n_features = 1;

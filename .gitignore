@@ -6,3 +6,4 @@
 **/*.PNG
 **/*Appendix.md
 **/.vagrant/*
+**/*.log
