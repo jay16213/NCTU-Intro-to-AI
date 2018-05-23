@@ -28,7 +28,6 @@ void Forest::loadTrainingSample(const string training_file)
     ifstream fin(training_file);
 
     this->n_samples = 0;
-    int class_id = -1;
     string line;
     while(getline(fin, line))
     {
@@ -45,10 +44,11 @@ void Forest::loadTrainingSample(const string training_file)
         string class_str;
         ss >> class_str;
 
-        if(findLabel(class_str, class_name) == -1)
+        int class_id = findLabel(class_str, class_name);
+        if(class_id == -1)
         {
             class_name.push_back(class_str);
-            class_id++;
+            class_id = class_name.size() - 1;
         }
 
         data.class_id = class_id;

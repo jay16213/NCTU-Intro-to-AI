@@ -108,8 +108,5 @@ int main(int argc, char **argv)
     printf(" total test data: %d (%d for training, %d for validation)\n", forest.n_samples, training_data_size, validation_data_size);
     printf(" training: %lf, validation: %lf\n", training_right_rate, validation_right_rate);
     printf("============================================\n");
-
-    // for shell script
-    printf("get %lf %lf\n", training_right_rate, validation_right_rate);
     return 0;
 }
