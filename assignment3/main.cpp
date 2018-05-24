@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <vector>
 #include <string>
+#include <ctime>
 #include "Forest.hpp"
 using namespace std;
 
