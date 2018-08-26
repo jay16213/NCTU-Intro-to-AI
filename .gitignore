@@ -3,7 +3,9 @@
 **/*.exe
 **/*.pdf
 **/*.docx
+**/*.xlsx
 **/*.PNG
 **/*Appendix.md
 **/.vagrant/*
 **/*.log
+**/*.zip
